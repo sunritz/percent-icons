@@ -2,13 +2,7 @@ exports.per = function(idc) {
   var d = document;
   var css = d.createElement('style');
   css.setAttribute('id', 'rbcss');
-  var rbcss = '';
-  var hcss = d.createElement('style');
-  hcss.setAttribute('id', 'rhcss');
-  var rhcss = '';
-  var pcss = d.createElement('style');
-  pcss.setAttribute('id', 'rpcss');
-  var rpcss = '';
+  var rbcss = '',rhcss = '',rpcss = '';
   for (let i = 0; i <= idc.length - 1; i++) {
     var rbd = d.getElementById(idc[i]);
     if (rbd.getAttribute('type') == 'ball') {
@@ -16,20 +10,22 @@ exports.per = function(idc) {
       val < 0 ? val = 0 : val = val;
       val > 100 ? val = 100 : val = val;
       var siz = rbd.dataset.size;
+      var fon = rbd.dataset.font;
+      var bgc = rbd.dataset.bgcolor;
+      var col = rbd.dataset.color;
+      var barcolor = rbd.dataset.barcolor;
+      var textcolor = rbd.dataset.textcolor;
       siz <= 100 ? siz = 100 : siz = siz;
       siz >= 200 ? siz = 200 : siz = siz;
       var s3 = parseInt(siz) - 6;
       var color;
       if (val >= 90) {
-        color = `
-      <stop offset="10%" stop-color="#c90000" stop-opacity="0.4" class="rbcolor"/>
-          <stop offset="80%" stop-color="#ff0000" stop-opacity="0.8" class="rbcolor"/>`
+        color = `<stop offset="10%" stop-color=` +barcolor+ ` stop-opacity="0.4" class="rbcolor"/>
+                 <stop offset="80%" stop-color=` +barcolor+ ` stop-opacity="0.8" class="rbcolor"/>`
       } else {
-        color = `
-      <stop offset="10%" stop-color="#00ff24" stop-opacity="0.4" class="rbcolor"/>
-          <stop offset="80%" stop-color="#8eff4a" stop-opacity="0.8" class="rbcolor"/>`
-      }
-      rbd.innerHTML = `
+        color = `<stop offset="10%" stop-color=` +col+ ` stop-opacity="0.4" class="rbcolor"/>
+                 <stop offset="80%" stop-color=` +col+ ` stop-opacity="0.8" class="rbcolor"/>`}
+    rbd.innerHTML = `
     <div class="rate-ball-text">` + val + `%</div>
       <svg class="wave" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
       viewBox="0 24 200 210">
@@ -51,7 +47,7 @@ exports.per = function(idc) {
       rbcss += `#` + idc[i] + `{
         width: ` + siz + `px;
         height: ` + siz + `px;
-        background-image: linear-gradient(-180deg, rgba(8, 159, 22, 1) 0%, rgba(53, 142, 0, 1) 0%);
+        background-image: linear-gradient(-180deg, rgba(8, 159, 22, 1) 0%, `+ bgc +` 0%);
         border-radius: 100%;
         overflow: hidden;
         position: relative;
@@ -78,6 +74,7 @@ exports.per = function(idc) {
       }`
       rbcss += `#` + idc[i] + ` .rate-ball-text{
         width:` + siz + `px;
+        color:`+ textcolor +`;
       }`
       rbcss += `#` + idc[i] + ` .parallax > use{
         animation: wave-move 1s linear infinite;
@@ -103,9 +100,9 @@ exports.per = function(idc) {
     .rate-ball-text {
     position: absolute;
     text-align: center;
-    top:calc(50% - 15px);
+    top:calc(50% - `+ fon +`/2);
     color:#fff;
-    font-size:20px;
+    font-size:`+ fon +`;
   }
   @keyframes wave-move {
     0% {
@@ -114,9 +111,8 @@ exports.per = function(idc) {
     100% {
       transform: translate(-85px, 0);
     }
-  }
- `
-    } else if (rbd.getAttribute('type') == 'hoop'){
+  }`
+} else if (rbd.getAttribute('type') == 'hoop'){
       var rhd = d.getElementById(idc[i]);
       var val = Number(rhd.dataset.value).toFixed(2);
       val < 0 ? val = 0 : val = val;
@@ -125,8 +121,9 @@ exports.per = function(idc) {
       siz <= 100 ? siz = 100 : siz = siz;
       siz >= 200 ? siz = 200 : siz = siz;
       var fon = rhd.dataset.font;
-      var bgc = rhd.dataset.color;
-      var col = rhd.dataset.bgcolor;
+      var bgc = rhd.dataset.bgcolor;
+      var col = rhd.dataset.color;
+      var textcolor = rhd.dataset.textcolor;
       rhd.innerHTML = `
     <div class="rate-hoop-wrapper">
         <div class="hoop-wrapper">
@@ -142,88 +139,75 @@ exports.per = function(idc) {
       rhcss += `#` + idc[i] + ` .rate-hoop-wrapper {
         width: ` + siz + `px;
         height: ` + siz + `px;
+        position: relative;
       }`
       rhcss += `#` + idc[i] + ` .rate-hoop-text{
         width: ` + siz + `px;
-        top:calc(` + siz + `px / 2 - 15px);}`
+        top:calc(` + siz + `px / 2 - 15px);
+        font-size: ` + fon + `;
+        height:30px;
+        line-height: 30px;
+        position: absolute;
+        text-align: center;
+        color:`+ textcolor +`;
+        }`
       rhcss += `#` + idc[i] + ` .hoop-wrapper{
         width: ` + siz / 2 + `px;
-        height: ` + siz + `px;}`
+        height: ` + siz + `px;
+        position: absolute;
+        top:0;
+        overflow: hidden;}`
       rhcss += `#` + idc[i] + ` .rate-hoop{
         width: ` + (siz - 20) + `px;
         height: ` + (siz - 20) + `px;
-        border:10px solid ` + bgc + `;}`
-      rhcss += `#` + idc[i] + ` .rate-hoop-text{
-        font-size: ` + fon + `;
-        color: ` + bgc + `;}`
+        border:10px solid ` + col + `;
+        border-radius: 50%;
+        position: absolute;
+        top:0;
+        transform: rotate(45deg);}`
       rhcss += `#` + idc[i] + ` .right-hoop{
+        border-top-color:` + bgc + `;
+        border-right-color:` + bgc + `;
+        border-left-color:` + col + `;
+        border-bottom-color:` + col + `;
+        transform: rotate(` + rb + `deg);
+        right:0;}`
+      rhcss += `#` + idc[i] + ` .left-hoop{
         border-top-color:` + col + `;
         border-right-color:` + col + `;
         border-left-color:` + bgc + `;
         border-bottom-color:` + bgc + `;
-        transform: rotate(` + rb + `deg);}`
-      rhcss += `#` + idc[i] + ` .left-hoop{
-        border-top-color:` + bgc + `;
-        border-right-color` + bgc + `;
-        border-left-color:` + col + `;
-        border-bottom-color:` + col + `;
-        transform: rotate(` + lb + `deg)}`
-      rhcss += `.rate-hoop-wrapper{
-         position: relative;
-        }
-        .rate-hoop-text{
-          height:30px;
-          line-height: 30px;
-          position: absolute;
-          text-align: center;
-        }
-        .hoop-wrapper{
-          position: absolute;
-          top:0;
-          overflow: hidden;
-        }
+        transform: rotate(` + lb + `deg);
+        left:0;}`
+      rhcss += `
         .hoop-wrapper:first-child{right:0;}
-        .hoop-wrapper:last-child{left:0;}
-        .rate-hoop{
-          border-radius: 50%;
-          position: absolute;
-          top:0;
-          transform: rotate(45deg);
-        }
-        .right-hoop{
-          right:0;
-        }
-        .left-hoop{
-          left:0;
-        }`
+        .hoop-wrapper:last-child{left:0;}`
     }else if (rbd.getAttribute('type') == 'bar'){
-      var rhd = d.getElementById(idc[i]);
-      var val = Number(rhd.dataset.value).toFixed(2);
+      var rba = d.getElementById(idc[i]);
+      var val = Number(rba.dataset.value).toFixed(2);
       val < 0 ? val = 0 : val = val;
       val > 100 ? val = 100 : val = val;
-      var wid = rhd.dataset.width;
-      var hig = rhd.dataset.height;
-      var fon = rhd.dataset.font;
+      var wid = rba.dataset.width;
+      var hig = rba.dataset.height;
+      var fon = rba.dataset.font;
+      var bgc = rba.dataset.bgcolor;
+      var col = rba.dataset.color;
+      var bor = rba.dataset.bordercolor;
+      var bar = rba.dataset.barcolor;
+      var two = rba.dataset.barcolortwo;
+      var tbg = rba.dataset.textbg;
+      var textcolor = rba.dataset.textcolor;
       wid <= 100 ? wid = 100 : wid = wid;
       wid >= 800 ? wid = 800 : wid = wid;
       hig >= 20 ? hig = 20 : hig = hig;
       hig <= 10 ? hig = 10 : hig = hig;
-      rhd.innerHTML = `
+      rba.innerHTML = `
     <div class="rb-progress-bar">
         <div class="rb-percentage">
         </div>
         <div class="rb-percentage-text">`+val+`%</div>
     </div>`
-
-      rpcss += `@keyframes rb-progress-animation {
-      0% {
-          background-position: 0 0;
-        }
-        100% {
-          background-position: 3em 0;
-        }
-      }
-      .rb-percentage:before {
+      rpcss += `#` + idc[i] + ` .rb-percentage:before {
         content: '';
         position: absolute;
         top: 0;
@@ -232,17 +216,18 @@ exports.per = function(idc) {
         bottom: 0;
         height: 100%;
         border-radius: 10px;
-        background-image: linear-gradient(to bottom, #6DA807, rgba(171, 226, 77, 0.6) 20%, transparent 70%, #d3ff93);
-      }
-      .rb-progress-bar {
+        background-image: linear-gradient(to bottom, `+col+`, `+bgc+` 30%, transparent 70%, `+col+`);
+      }`+
+      `#` + idc[i] +` .rb-progress-bar {
         width:`+wid+`px;
+        height:`+hig+`px;
         position: relative;
-        background-color: #d3ff93;
-        border: 1px solid #6DA807;
+        background-color: `+bgc+`;
+        border: 1px solid `+bor+`;
         border-radius: 100px;
         display:inline-block;
-      }
-      .rb-percentage-text{
+      }`+
+      `#` + idc[i] +` .rb-percentage-text{
         position: absolute;
         padding:4px;
         left:`+val+`%;
@@ -250,10 +235,10 @@ exports.per = function(idc) {
         border-radius: 0px 8px 8px 8px;
         text-align:center;
         font-size:`+fon+`;
-        color:#fff;
-        background:red;
-      }
-      .rb-percentage-text::before{
+        color:`+textcolor+`;
+        background:`+tbg+`;
+      }`+
+      `#` + idc[i] +` .rb-percentage-text::before{
         content: '';
         position: absolute;
         left:-4px;
@@ -261,36 +246,30 @@ exports.per = function(idc) {
         top: -4px;
         border:4px solid yellow;
         border-color:transparent;
-        border-top-color:red;
-      }
-      .rb-progress-bar .rb-percentage {
+        border-top-color:`+tbg+`;
+        box-sizing: inherit;
+      }`+
+      `#` + idc[i] +` .rb-progress-bar .rb-percentage {
         height:`+hig+`px;
         width: `+val+`%;
         border-radius: 100px;
-        background-color: #6DA807;
+        background-color: `+bar+`;
         background-size: 3em 3em;
         float:left;
-        background-image: linear-gradient(-45deg, transparent 0em, transparent 0.8em, #96D923 0.9em, #96D923 2.1em, transparent 2.1em, transparent 2.9em, #96D923 3.1em);
+        background-image: linear-gradient(-45deg, transparent 0em, transparent 0.8em, `+two+` 0.9em, `+two+` 2.1em, transparent 2.1em, transparent 2.9em, `+two+` 3.1em);
         animation: rb-progress-animation 750ms infinite linear;
+      }`+`
+      @keyframes rb-progress-animation {
+      0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 3em 0;
+        }
       }`
     }
   }
-  css.innerHTML = rbcss;
-  if (d.getElementById('rbcss')) {
-    d.getElementById('rbcss').innerHTML = rbcss;
-  } else {
-    d.body.appendChild(css);
-  }
-  hcss.innerHTML = rhcss;
-  if (d.getElementById('rhcss')) {
-    d.getElementById('rhcss').innerHTML = rhcss;
-  } else {
-    d.body.appendChild(hcss);
-  }
-  pcss.innerHTML = rpcss;
-  if (d.getElementById('rpcss')) {
-    d.getElementById('rpcss').innerHTML = rpcss;
-  } else {
-    d.body.appendChild(pcss);
-  }
+  var rh = rbcss.concat(rhcss).concat(rpcss).concat("*{box-sizing:inherit;}");
+  css.innerHTML = rh;
+  d.body.appendChild(css);
 }
